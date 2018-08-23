@@ -6,10 +6,10 @@ rdkafka的下php-rdkafka的php类库
 ## 目录
 
 1. [安装](#安装)
-3. [使用](#使用)
+2. [使用](#使用)
    * [消费](#消费)
    * [生产](#生产)
-
+3. [更多配置](#更多配置)
 
 ## 安装
 > 具体查看librdkafk和php-rdkafka
@@ -48,4 +48,68 @@ $rst = $producer->setBrokerServer()
                  ->producer('qkl037', 90);
 
 var_dump($rst);
+```
+
+## 更多配置
+```
+$defaultConfig = [
+    'ip'=>'127.0.0.1',  #默认服务器地址
+    'log_path'=> sys_get_temp_dir(),  #日志默认地址
+    'dr_msg_cb' => [$this, 'defaultDrMsg'],  #生产的dr回调
+    'error_cb' => [$this, 'defaultErrorCb'],  #错误回调
+    'rebalance_cb' => [$this, 'defaultRebalance']  #负载回调，你可以用匿名方法自定义
+];
+
+# broker相关配置，你可以参考Configuration.md
+$brokerConfig = [
+    'request.required.acks'=> -1,
+    'auto.commit.enable'=> 1,
+    'auto.commit.interval.ms'=> 100,
+    'offset.store.method'=> 'broker',
+    'offset.store.path'=> sys_get_temp_dir(),
+    'auto.offset.reset'=> 'smallest',
+];
+```
+
+### defaultDrMsg
+```
+function defaultDrMsg($kafka, $message) {
+    file_put_contents($this->config['log_path'] . "/dr_cb.log", var_export($message, true).PHP_EOL, FILE_APPEND);
+}
+```
+
+### defaultErrorCb
+```
+function defaultErrorCb($kafka, $err, $reason) {
+    file_put_contents($this->config['log_path'] . "/err_cb.log", sprintf("Kafka error: %s (reason: %s)", rd_kafka_err2str($err), $reason).PHP_EOL, FILE_APPEND);
+}
+```
+
+
+### defaultRebalance
+```
+function defaultRebalance(\RdKafka\KafkaConsumer $kafka, $err, array $partitions = null)
+{
+    switch ($err) {
+        case RD_KAFKA_RESP_ERR__ASSIGN_PARTITIONS:
+            echo "Assign: ";
+            if (is_null($this->getCurrentTopic())) {
+                $kafka->assign();
+            } else {
+                $kafka->assign([
+                    new \RdKafka\TopicPartition( $this->getCurrentTopic(), $this->getPartition($this->getCurrentTopic()), $this->getOffset($this->getCurrentTopic()) )
+                ]);
+            }
+            break;
+
+        case RD_KAFKA_RESP_ERR__REVOKE_PARTITIONS:
+            echo "Revoke: ";
+            var_dump($partitions);
+            $kafka->assign(NULL);
+            break;
+
+        default:
+            throw new \Exception($err);
+    }
+}
 ```
