@@ -1,15 +1,7 @@
 ## php-rdkafka-class
 rdkafka的下php-rdkafka的php类库
 
-![kafka version support](https://img.shields.io/badge/kafka-0.8%200.9%201.0%201.1%20or%201.1%2B-brightgreen.svg) 
- 
-![php version support](https://img.shields.io/badge/php-5.3%2B-green.svg)
-
-
-![librdkafka version support](https://img.shields.io/badge/librdkafka-3.0.5%2B-yellowgreen.svg)
-
-
-![php-librdkafka](https://img.shields.io/badge/php--librdkafka-3.0.5%2B-orange.svg)
+[![kafka version support](https://img.shields.io/badge/kafka-0.8%200.9%201.0%201.1%20or%201.1%2B-brightgreen.svg)](#) [![php version support](https://img.shields.io/badge/php-5.3%2B-green.svg)](#) [![librdkafka version support](https://img.shields.io/badge/librdkafka-3.0.5%2B-yellowgreen.svg)](#) [![php-librdkafka](https://img.shields.io/badge/php--librdkafka-3.0.5%2B-orange.svg)](#)
 
 ## 目录
 
