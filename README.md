@@ -23,7 +23,6 @@ $consumer = new \Vendors\Queue\Msg\Kafka\Consumer(['ip'=>'192.168.216.122']);
 $consumer->setConsumerGroup('test-110-sxx1')
      ->setBrokerServer('192.168.216.122')
      ->setConsumerTopic()
-     ->subscribe('qkl01')
      ->setTopic('qkl01', 0, $offset)
      ->subscribe(['qkl01'])
      ->consumer(function($msg){
